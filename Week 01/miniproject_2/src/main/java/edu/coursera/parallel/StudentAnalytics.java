@@ -162,6 +162,8 @@ public final class StudentAnalytics {
                 count++;
             }
         }
+        
+        System.out.println("The count number of failed students: " + count);
         return count;
     }
 
@@ -181,14 +183,14 @@ public final class StudentAnalytics {
         
     	//throw new UnsupportedOperationException();
         
-        int retVal = Stream.of(studentArray)
+        int sum = Stream.of(studentArray)
     			.parallel()
-    			.filter(s -> s.checkIsCurrent() && s.getAge() > 20 && s.getGrade() < 65)
+    			.filter(s -> !s.checkIsCurrent() && s.getAge() > 20 && s.getGrade() < 65)
     			.mapToInt(s -> 1)
     			.sum();
     			
-    	//System.out.println("The average age is: " + retVal);
-    	return retVal;
+    	System.out.println("The count (parallel) is: " + sum);
+    	return sum;
         
     }
 }
