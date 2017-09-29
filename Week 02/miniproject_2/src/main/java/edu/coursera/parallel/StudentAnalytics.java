@@ -111,7 +111,38 @@ public final class StudentAnalytics {
      */
     public String mostCommonFirstNameOfInactiveStudentsParallelStream(
             final Student[] studentArray) {
-        throw new UnsupportedOperationException();
+      //  throw new UnsupportedOperationException();
+        
+        List<Student> activeStudents = new ArrayList<Student>();
+
+        for (Student s : studentArray) {
+            if (!s.checkIsCurrent()) {
+                activeStudents.add(s);
+            }
+        }
+
+        Map<String, Integer> nameCounts = new HashMap<String, Integer>();
+
+        for (Student s : activeStudents) {
+            if (nameCounts.containsKey(s.getFirstName())) {
+                nameCounts.put(s.getFirstName(),
+                        new Integer(nameCounts.get(s.getFirstName()) + 1));
+            } else {
+                nameCounts.put(s.getFirstName(), 1);
+            }
+        }
+
+        String mostCommon = null;
+        int mostCommonCount = -1;
+        for (Map.Entry<String, Integer> entry : nameCounts.entrySet()) {
+            if (mostCommon == null || entry.getValue() > mostCommonCount) {
+                mostCommon = entry.getKey();
+                mostCommonCount = entry.getValue();
+            }
+        }
+
+        return mostCommon;
+        
     }
 
     /**
@@ -131,6 +162,8 @@ public final class StudentAnalytics {
                 count++;
             }
         }
+        
+        System.out.println("The count number of failed students: " + count);
         return count;
     }
 
@@ -147,6 +180,17 @@ public final class StudentAnalytics {
      */
     public int countNumberOfFailedStudentsOlderThan20ParallelStream(
             final Student[] studentArray) {
-        throw new UnsupportedOperationException();
+        
+    	//throw new UnsupportedOperationException();
+        
+        int sum = Stream.of(studentArray)
+    			.parallel()
+    			.filter(s -> !s.checkIsCurrent() && s.getAge() > 20 && s.getGrade() < 65)
+    			.mapToInt(s -> 1)
+    			.sum();
+    			
+    	System.out.println("The count (parallel) is: " + sum);
+    	return sum;
+        
     }
 }
